@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المهرة 2026 | لوحة القيادة</title>
+    <title>المهرة 2026 | لوحة القيادة السحابية</title>
     <!-- خط تجوال -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;400;500;700;900&display=swap" rel="stylesheet">
     <!-- أيقونات FontAwesome -->
@@ -111,7 +111,7 @@
             padding: 25px;
             box-shadow: var(--glass-shadow);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative; /* For print positioning */
+            position: relative;
         }
 
         .glass-panel:hover {
@@ -138,6 +138,31 @@
         }
         
         .section-title i { color: var(--primary-purple); }
+
+        /* --- مؤشر حالة الاتصال --- */
+        .status-indicator {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            background: rgba(0,0,0,0.3);
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #666;
+        }
+        .status-dot.online { background-color: var(--success); box-shadow: 0 0 8px var(--success); }
+        .status-dot.syncing { background-color: var(--accent-gold); animation: blink 1s infinite; }
+
+        @keyframes blink { 50% { opacity: 0.5; } }
 
         /* --- أزرار الطباعة في الهيدر --- */
         .header-actions .btn-print {
@@ -385,14 +410,6 @@
 
         .btn-save:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--primary-glow); }
 
-        .btn-reset {
-            background: rgba(255,255,255,0.05);
-            color: var(--text-muted);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .btn-reset:hover { background: rgba(255, 71, 87, 0.1); color: var(--danger); border-color: var(--danger); }
-
         /* --- Toast Notification --- */
         #toast {
             position: fixed;
@@ -415,120 +432,21 @@
 
         /* --- إعدادات الطباعة (Print Styles) --- */
         @media print {
-            /* إخفاء كل العناصر بشكل افتراضي */
-            body * {
-                visibility: hidden;
-            }
+            body * { visibility: hidden; }
+            body { background: white !important; color: black !important; background-image: none !important; }
+            header, .floating-dock, .btn-print, .btn-add, .btn-icon, #toast, .status-indicator { display: none !important; }
 
-            /* إعادة تعيين خلفية الصفحة للورق */
-            body {
-                background: white !important;
-                color: black !important;
-                background-image: none !important;
-            }
-
-            /* إخفاء الأزرار والأدوات غير الضرورية */
-            header, .floating-dock, .btn-print, .btn-add, .btn-icon, #toast {
-                display: none !important;
-            }
-
-            /* --- طباعة الجدول الزمني كبطاقة --- */
             body.print-timeline #timeline-panel,
-            body.print-timeline #timeline-panel * {
-                visibility: visible;
-            }
-
-            body.print-timeline #timeline-panel {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                background: white !important;
-                color: black !important;
-                border: 2px solid #000;
-                box-shadow: none;
-                backdrop-filter: none;
-                border-radius: 0;
-                padding: 40px;
-            }
-
-            body.print-timeline .timeline-item {
-                background: #f8f9fa !important;
-                border: 1px solid #ddd !important;
-                color: #000 !important;
-                margin-bottom: 20px;
-                page-break-inside: avoid;
-            }
-
-            body.print-timeline .timeline-title {
-                color: #000 !important;
-                font-size: 1.3rem;
-            }
-
-            body.print-timeline .time-badge {
-                background: #eee !important;
-                color: #000 !important;
-                border: 1px solid #ccc;
-            }
+            body.print-timeline #timeline-panel * { visibility: visible; }
+            body.print-timeline #timeline-panel { position: absolute; top: 0; left: 0; width: 100%; border: none; padding: 20px; color: black !important; }
+            body.print-timeline .timeline-item { border: 1px solid #ccc !important; background: #f9f9f9 !important; color: black !important; page-break-inside: avoid; }
+            body.print-timeline .timeline-title { color: black !important; }
             
-            body.print-timeline .timeline-desc {
-                color: #444 !important;
-            }
-
-            body.print-timeline .section-title {
-                color: #000 !important;
-                font-size: 2rem;
-                margin-bottom: 30px;
-                justify-content: center;
-                border-bottom: 2px solid #000;
-            }
-
-            /* --- طباعة الجدول الأسبوعي كبطاقة --- */
             body.print-weekly #weekly-panel,
-            body.print-weekly #weekly-panel * {
-                visibility: visible;
-            }
-
-            body.print-weekly #weekly-panel {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                background: white !important;
-                color: black !important;
-                border: 2px solid #000;
-                box-shadow: none;
-                backdrop-filter: none;
-                padding: 30px;
-            }
-
-            body.print-weekly table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-
-            body.print-weekly th {
-                background: #eee !important;
-                color: #000 !important;
-                border: 1px solid #000;
-                text-align: center;
-                font-size: 1.1rem;
-            }
-
-            body.print-weekly td {
-                border: 1px solid #000 !important;
-                color: #000 !important;
-                background: white !important;
-                text-align: center;
-            }
-            
-            body.print-weekly .section-title {
-                color: #000 !important;
-                justify-content: center;
-                font-size: 2rem;
-                border-bottom: 2px solid #000;
-                margin-bottom: 30px;
-            }
+            body.print-weekly #weekly-panel * { visibility: visible; }
+            body.print-weekly #weekly-panel { position: absolute; top: 0; left: 0; width: 100%; border: none; padding: 20px; color: black !important; }
+            body.print-weekly table { border: 1px solid #000; border-collapse: collapse; width: 100%; }
+            body.print-weekly td, body.print-weekly th { border: 1px solid #000 !important; color: black !important; background: white !important; }
         }
 
         /* Mobile Adjustments */
@@ -544,9 +462,15 @@
 <body>
 
 <div class="dashboard-container">
+    <!-- مؤشر الحالة السحابية -->
+    <div class="status-indicator">
+        <div class="status-dot" id="connection-dot"></div>
+        <span id="connection-text">جارٍ الاتصال...</span>
+    </div>
+
     <header>
         <h1 class="logo-text">المُهــرة</h1>
-        <div class="subtitle">استراتيجية موسم 2026 | لوحة التحكم</div>
+        <div class="subtitle">استراتيجية موسم 2026 | سحابية (Firebase)</div>
     </header>
 
     <div class="grid-layout">
@@ -563,35 +487,31 @@
             </div>
             
             <div class="timeline-container" id="daily-routine">
-                <!-- العناصر هنا قابلة للتعديل -->
+                <!-- تم إعادة البيانات الافتراضية هنا -->
                 <div class="timeline-item">
                     <div class="time-badge" contenteditable="true">00 - 30 د</div>
-                    <div class="timeline-title" contenteditable="true">مجلس المهرة</div>
-                    <div class="timeline-desc" contenteditable="true">دخول فخم، ترحيب بالاسم، استعراض اللوك.</div>
+                    <div class="timeline-title" contenteditable="true">مجلس المهرة (الافتتاحية)</div>
+                    <div class="timeline-desc" contenteditable="true">دخول فخم، ترحيب بالاسم، استعراض اللوك. (بدون قستات)</div>
                 </div>
-                
                 <div class="timeline-item">
                     <div class="time-badge" contenteditable="true">الساعة 2</div>
-                    <div class="timeline-title" contenteditable="true">جولات تسخين</div>
-                    <div class="timeline-desc" contenteditable="true">قستات مع أصدقاء، ضحك، تجميع الجمهور.</div>
+                    <div class="timeline-title" contenteditable="true">جولات خفيفة (تسخين)</div>
+                    <div class="timeline-desc" contenteditable="true">قستات مع أصدقاء، ضحك، طقطقة. الهدف: تجميع الجمهور.</div>
                 </div>
-
                 <div class="timeline-item prime-time">
-                    <div class="time-badge" contenteditable="true">الساعة 3 🔥</div>
-                    <div class="timeline-title" contenteditable="true">وقت القمة</div>
-                    <div class="timeline-desc" contenteditable="true">وقت الداعمين ورسلان. جولات PK، حماس عالي.</div>
+                    <div class="time-badge" contenteditable="true">الساعة 3</div>
+                    <div class="timeline-title" contenteditable="true">وقت الجد (القمة) 🔥</div>
+                    <div class="timeline-desc" contenteditable="true">وقت رسلان والداعمين. جولات PK قوية، تركيز تام، حماس عالي.</div>
                 </div>
-
                 <div class="timeline-item">
                     <div class="time-badge" contenteditable="true">الساعة 4</div>
-                    <div class="timeline-title" contenteditable="true">وقت العائلة</div>
-                    <div class="timeline-desc" contenteditable="true">فتح القست للمتابعين، سوالف وقصص.</div>
+                    <div class="timeline-title" contenteditable="true">العائلة (قستات داخلية)</div>
+                    <div class="timeline-desc" contenteditable="true">فتح القست للمتابعين (بنات وشباب). سوالف وقصص.</div>
                 </div>
-
                 <div class="timeline-item">
                     <div class="time-badge" contenteditable="true">الختام</div>
                     <div class="timeline-title" contenteditable="true">الوداعية</div>
-                    <div class="timeline-desc" contenteditable="true">شكر الداعمين، إغلاق إيجابي.</div>
+                    <div class="timeline-desc" contenteditable="true">شكر الداعمين، إعلان الغد، إغلاق إيجابي.</div>
                 </div>
             </div>
         </div>
@@ -619,6 +539,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <!-- تم إعادة البيانات الافتراضية هنا -->
                             <tr>
                                 <td style="color:var(--accent-gold); font-weight:bold;">الأحد</td>
                                 <td contenteditable="true">بداية الأسبوع</td>
@@ -676,16 +597,17 @@
                         </tr>
                     </thead>
                     <tbody>
+                         <!-- تم إعادة البيانات الافتراضية هنا -->
                         <tr>
                             <td contenteditable="true">طلة ملك - رابح صقر</td>
-                            <td contenteditable="true">فرض الهيبة</td>
+                            <td contenteditable="true">فرض الهيبة والفخامة</td>
                             <td contenteditable="true">كلاسيكية</td>
                             <td><button onclick="deleteRow(this)" class="btn-icon"><i class="fa-solid fa-trash"></i></button></td>
                         </tr>
                         <tr>
-                            <td contenteditable="true">أنتِ الأصل - المهندس</td>
+                            <td contenteditable="true">أنتِ الأصل - ماجد المهندس</td>
                             <td contenteditable="true">رقي وأنوثة</td>
-                            <td contenteditable="true">رسمي</td>
+                            <td contenteditable="true">إطلالات رسمية</td>
                             <td><button onclick="deleteRow(this)" class="btn-icon"><i class="fa-solid fa-trash"></i></button></td>
                         </tr>
                     </tbody>
@@ -703,16 +625,17 @@
                         </tr>
                     </thead>
                     <tbody>
+                         <!-- تم إعادة البيانات الافتراضية هنا -->
                         <tr>
                             <td contenteditable="true">زلزلة - بدر الشعيفاني</td>
                             <td contenteditable="true">حماس قبلي</td>
-                            <td contenteditable="true">البداية</td>
+                            <td contenteditable="true">بداية الجولة</td>
                             <td><button onclick="deleteRow(this)" class="btn-icon"><i class="fa-solid fa-trash"></i></button></td>
                         </tr>
                         <tr>
                             <td contenteditable="true">Two Steps From Hell</td>
-                            <td contenteditable="true">ملحمي</td>
-                            <td contenteditable="true">آخر 30ث</td>
+                            <td contenteditable="true">حماس ملحمي</td>
+                            <td contenteditable="true">آخر 30 ثانية</td>
                             <td><button onclick="deleteRow(this)" class="btn-icon"><i class="fa-solid fa-trash"></i></button></td>
                         </tr>
                     </tbody>
@@ -732,14 +655,9 @@
                 <div class="topic-card" id="topic-box-1">
                     <h3 style="color: var(--primary-purple); margin-top:0;">💬 مواضيع عميقة</h3>
                     <ul class="topic-list">
-                        <li>
-                            <span contenteditable="true">قرار اتخذته وغير حياتك؟</span>
-                            <button class="btn-icon" onclick="deleteItem(this)"><i class="fa-solid fa-xmark"></i></button>
-                        </li>
-                        <li>
-                            <span contenteditable="true">لو ترجع بالزمن وش تصلح؟</span>
-                            <button class="btn-icon" onclick="deleteItem(this)"><i class="fa-solid fa-xmark"></i></button>
-                        </li>
+                         <!-- تم إعادة البيانات الافتراضية هنا -->
+                        <li><span contenteditable="true">قرار اتخذته وغير حياتك؟</span> <button class="btn-icon" onclick="deleteItem(this)"><i class="fa-solid fa-xmark"></i></button></li>
+                        <li><span contenteditable="true">لو ترجع بالزمن وش تصلح؟</span> <button class="btn-icon" onclick="deleteItem(this)"><i class="fa-solid fa-xmark"></i></button></li>
                     </ul>
                     <button class="btn-add" onclick="addListItem('topic-box-1')">إضافة موضوع</button>
                 </div>
@@ -747,14 +665,9 @@
                 <div class="topic-card" id="topic-box-2">
                     <h3 style="color: var(--accent-gold); margin-top:0;">😂 مواضيع ضحك</h3>
                     <ul class="topic-list">
-                        <li>
-                            <span contenteditable="true">مصيبة سويتها وأهلك ما دروا؟</span>
-                            <button class="btn-icon" onclick="deleteItem(this)"><i class="fa-solid fa-xmark"></i></button>
-                        </li>
-                        <li>
-                            <span contenteditable="true">أغرب هدية وصلتك؟</span>
-                            <button class="btn-icon" onclick="deleteItem(this)"><i class="fa-solid fa-xmark"></i></button>
-                        </li>
+                         <!-- تم إعادة البيانات الافتراضية هنا -->
+                        <li><span contenteditable="true">مصيبة سويتها وأهلك ما دروا؟</span> <button class="btn-icon" onclick="deleteItem(this)"><i class="fa-solid fa-xmark"></i></button></li>
+                        <li><span contenteditable="true">أغرب هدية وصلتك؟</span> <button class="btn-icon" onclick="deleteItem(this)"><i class="fa-solid fa-xmark"></i></button></li>
                     </ul>
                     <button class="btn-add" onclick="addListItem('topic-box-2')">إضافة موضوع</button>
                 </div>
@@ -766,136 +679,178 @@
 
 <!-- أدوات التحكم العائمة -->
 <div class="floating-dock">
-    <button class="dock-btn btn-save" onclick="saveAll()">
-        <i class="fa-solid fa-floppy-disk"></i> حفظ التعديلات
-    </button>
-    <button class="dock-btn btn-reset" onclick="resetAll()">
-        <i class="fa-solid fa-rotate-left"></i> استعادة
+    <button class="dock-btn btn-save" onclick="saveToFirebase()">
+        <i class="fa-solid fa-cloud-arrow-up"></i> حفظ سحابي
     </button>
 </div>
 
-<div id="toast"><i class="fa-solid fa-check-circle"></i> تم الحفظ بنجاح!</div>
+<div id="toast"><i class="fa-solid fa-check-circle"></i></div>
 
-<script>
-    // --- تحميل البيانات عند البدء ---
-    window.onload = function() {
-        loadAll();
+<!-- Firebase Scripts -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+    // 🔴 تم تحديث الإعدادات الخاصة بمشروعك (dash-e42b4)
+    const firebaseConfig = {
+        apiKey: "AIzaSyCNhL3odOEYevxNKo5tKPnjDT_JcEb68hI",
+        authDomain: "dash-e42b4.firebaseapp.com",
+        projectId: "dash-e42b4",
+        storageBucket: "dash-e42b4.firebasestorage.app",
+        messagingSenderId: "641536802356",
+        appId: "1:641536802356:web:fad9656ee284f235615461",
+        measurementId: "G-T2R7MSZ7Q3"
     };
 
-    // --- وظيفة الطباعة ---
-    function printSection(type) {
-        // إزالة أي فئات طباعة سابقة
-        document.body.classList.remove('print-timeline', 'print-weekly');
-        
-        // إضافة الفئة المناسبة بناءً على الزر المضغوط
-        if (type === 'timeline') {
-            document.body.classList.add('print-timeline');
-        } else if (type === 'weekly') {
-            document.body.classList.add('print-weekly');
-        }
+    // التحقق من البيئة (هل نحن في بيئة التطوير أم الإنتاج)
+    const configToUse = (typeof __firebase_config !== 'undefined') ? JSON.parse(__firebase_config) : firebaseConfig;
+    const appIdToUse = (typeof __app_id !== 'undefined') ? __app_id : 'default-mohra-app';
 
-        // استدعاء نافذة الطباعة
-        window.print();
-
-        // إزالة الفئات بعد الانتهاء من الطباعة (اختياري، لكن أفضل للعودة للوضع الطبيعي إذا ألغى المستخدم)
-        // ملاحظة: بعض المتصفحات لا تدعم onafterprint بشكل مثالي، لذا نترك الكلاس حتى يضغط زر آخر أو يعاد تحميل الصفحة، 
-        // أو نستخدم setTimeout لإزالتها، لكن الأفضل تركها للمتصفح يعالجها عبر الـ CSS المخصص للطباعة فقط.
-        // الـ CSS @media print يطبق التنسيقات فقط *أثناء* الطباعة، لذا لا داعي لإزالة الكلاس فوراً بالجافاسكربت للتأثير المرئي على الشاشة.
-    }
-
-    // --- نظام الحفظ والاسترجاع ---
-    function saveAll() {
-        // Save Timeline
-        localStorage.setItem('mohra_timeline_v2', document.getElementById('daily-routine').innerHTML);
-        
-        // Save Tables
-        localStorage.setItem('mohra_music_1_v2', document.getElementById('music-table-1').querySelector('tbody').innerHTML);
-        localStorage.setItem('mohra_music_2_v2', document.getElementById('music-table-2').querySelector('tbody').innerHTML);
-        localStorage.setItem('mohra_weekly_v2', document.getElementById('weekly-table').querySelector('tbody').innerHTML);
-        
-        // Save Topics
-        localStorage.setItem('mohra_topic_1_v2', document.getElementById('topic-box-1').querySelector('ul').innerHTML);
-        localStorage.setItem('mohra_topic_2_v2', document.getElementById('topic-box-2').querySelector('ul').innerHTML);
-        
-        showToast();
-    }
-
-    function loadAll() {
-        if(localStorage.getItem('mohra_timeline_v2')) {
-            document.getElementById('daily-routine').innerHTML = localStorage.getItem('mohra_timeline_v2');
-        }
-        if(localStorage.getItem('mohra_music_1_v2')) {
-            document.getElementById('music-table-1').querySelector('tbody').innerHTML = localStorage.getItem('mohra_music_1_v2');
-        }
-        if(localStorage.getItem('mohra_music_2_v2')) {
-            document.getElementById('music-table-2').querySelector('tbody').innerHTML = localStorage.getItem('mohra_music_2_v2');
-        }
-        if(localStorage.getItem('mohra_weekly_v2')) {
-            document.getElementById('weekly-table').querySelector('tbody').innerHTML = localStorage.getItem('mohra_weekly_v2');
-        }
-        if(localStorage.getItem('mohra_topic_1_v2')) {
-            document.getElementById('topic-box-1').querySelector('ul').innerHTML = localStorage.getItem('mohra_topic_1_v2');
-        }
-        if(localStorage.getItem('mohra_topic_2_v2')) {
-            document.getElementById('topic-box-2').querySelector('ul').innerHTML = localStorage.getItem('mohra_topic_2_v2');
-        }
-    }
-
-    function resetAll() {
-        if(confirm("هل أنت متأكد؟ سيتم العودة للنسخة الأصلية وحذف تعديلاتك.")) {
-            localStorage.clear();
-            location.reload();
-        }
-    }
-
-    // --- وظائف التعديل الديناميكي ---
+    // تهيئة Firebase
+    const app = initializeApp(configToUse);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
     
-    function addRow(tableId) {
+    let currentUser = null;
+    const updateDot = document.getElementById('connection-dot');
+    const updateText = document.getElementById('connection-text');
+
+    // المصادقة
+    const initAuth = async () => {
+        try {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                await signInAnonymously(auth);
+            }
+        } catch (error) {
+            console.error("Auth Error:", error);
+            updateText.innerText = "خطأ في الاتصال";
+            updateDot.style.backgroundColor = "red";
+        }
+    };
+
+    initAuth();
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            currentUser = user;
+            updateDot.className = "status-dot online";
+            updateText.innerText = "متصل بالسحابة";
+            loadData(); // تحميل البيانات فور الاتصال
+        } else {
+            updateDot.className = "status-dot";
+            updateText.innerText = "غير متصل";
+        }
+    });
+
+    // دالة التحميل والمزامنة الفورية (Real-time Sync)
+    function loadData() {
+        if (!currentUser) return;
+
+        // artifacts/appId/public/data/dashboard_layout/main_config
+        const docRef = doc(db, 'artifacts', appIdToUse, 'public', 'data', 'dashboard_layout', 'main_config');
+
+        onSnapshot(docRef, (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                
+                // تحديث الواجهة فقط إذا كانت البيانات موجودة في السحابة
+                if(data.timeline) document.getElementById('daily-routine').innerHTML = data.timeline;
+                if(data.weekly) document.getElementById('weekly-table').querySelector('tbody').innerHTML = data.weekly;
+                if(data.music1) document.getElementById('music-table-1').querySelector('tbody').innerHTML = data.music1;
+                if(data.music2) document.getElementById('music-table-2').querySelector('tbody').innerHTML = data.music2;
+                if(data.topic1) document.getElementById('topic-box-1').querySelector('ul').innerHTML = data.topic1;
+                if(data.topic2) document.getElementById('topic-box-2').querySelector('ul').innerHTML = data.topic2;
+
+                updateDot.className = "status-dot online"; // توقف الوميض
+            } else {
+                console.log("استخدام البيانات الافتراضية");
+                // هنا لا نفعل شيئاً، مما يبقي على البيانات التي أضفناها في HTML
+            }
+        }, (error) => {
+            console.error("Error getting document:", error);
+            updateText.innerText = "فشل المزامنة";
+        });
+    }
+
+    // دالة الحفظ للسحابة
+    window.saveToFirebase = async function() {
+        if (!currentUser) {
+            showToast("⚠️ يجب الانتظار حتى يتم الاتصال بالسيرفر");
+            return;
+        }
+
+        updateDot.className = "status-dot syncing"; // بدء وميض المزامنة
+        updateText.innerText = "جارٍ الحفظ...";
+
+        const dataToSave = {
+            timeline: document.getElementById('daily-routine').innerHTML,
+            weekly: document.getElementById('weekly-table').querySelector('tbody').innerHTML,
+            music1: document.getElementById('music-table-1').querySelector('tbody').innerHTML,
+            music2: document.getElementById('music-table-2').querySelector('tbody').innerHTML,
+            topic1: document.getElementById('topic-box-1').querySelector('ul').innerHTML,
+            topic2: document.getElementById('topic-box-2').querySelector('ul').innerHTML,
+            lastUpdated: new Date().toISOString(),
+            updatedBy: currentUser.uid
+        };
+
+        try {
+            const docRef = doc(db, 'artifacts', appIdToUse, 'public', 'data', 'dashboard_layout', 'main_config');
+            await setDoc(docRef, dataToSave);
+            
+            showToast("✅ تم الحفظ في السحابة بنجاح!");
+            updateDot.className = "status-dot online";
+            updateText.innerText = "متصل بالسحابة";
+        } catch (error) {
+            console.error("Error saving document: ", error);
+            showToast("❌ حدث خطأ أثناء الحفظ");
+            updateDot.style.backgroundColor = "red";
+        }
+    };
+
+    // --- الوظائف المساعدة (Toast, Print, Add/Remove) ---
+    // (تم نقلها لل window لتكون متاحة لل HTML)
+
+    window.printSection = function(type) {
+        document.body.classList.remove('print-timeline', 'print-weekly');
+        if (type === 'timeline') document.body.classList.add('print-timeline');
+        else if (type === 'weekly') document.body.classList.add('print-weekly');
+        window.print();
+    };
+
+    window.addRow = function(tableId) {
         const table = document.getElementById(tableId).querySelector('tbody');
         const newRow = table.insertRow();
-        
-        // تحديد عدد الخلايا بناءً على الهيدر
         const headerCells = document.getElementById(tableId).rows[0].cells.length;
-        
         for(let i=0; i < headerCells - 1; i++) {
             const cell = newRow.insertCell(i);
             cell.contentEditable = "true";
             cell.innerText = "اكتب هنا...";
         }
-        
-        // خلية زر الحذف
         const delCell = newRow.insertCell(headerCells - 1);
         delCell.innerHTML = '<button onclick="deleteRow(this)" class="btn-icon"><i class="fa-solid fa-trash"></i></button>';
-    }
+    };
 
-    function deleteRow(btn) {
-        if(confirm("هل تريد حذف هذا الصف؟")) {
-            const row = btn.closest('tr');
-            row.remove();
-        }
-    }
+    window.deleteRow = function(btn) {
+        if(confirm("حذف الصف؟")) btn.closest('tr').remove();
+    };
 
-    function addListItem(boxId) {
+    window.addListItem = function(boxId) {
         const ul = document.getElementById(boxId).querySelector('ul');
         const li = document.createElement('li');
-        li.innerHTML = `
-            <span contenteditable="true">موضوع جديد...</span>
-            <button class="btn-icon" onclick="deleteItem(this)"><i class="fa-solid fa-xmark"></i></button>
-        `;
-        // تأثير انيميشن بسيط عند الاضافة
-        li.style.opacity = 0;
+        li.innerHTML = `<span contenteditable="true">موضوع جديد...</span> <button class="btn-icon" onclick="deleteItem(this)"><i class="fa-solid fa-xmark"></i></button>`;
         ul.appendChild(li);
-        setTimeout(() => li.style.opacity = 1, 10);
-    }
+    };
 
-    function deleteItem(btn) {
-        const item = btn.closest('li');
-        item.style.opacity = 0;
-        setTimeout(() => item.remove(), 300);
-    }
+    window.deleteItem = function(btn) {
+        btn.closest('li').remove();
+    };
 
-    function showToast() {
+    function showToast(message) {
         var x = document.getElementById("toast");
+        x.innerText = message;
         x.className = "show";
         setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
     }
